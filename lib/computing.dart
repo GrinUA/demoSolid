@@ -9,7 +9,7 @@ abstract class ImageComparator {
     image.Image second = image.decodeImage(secondFile.readAsBytesSync());
 
     if (first.width != second.width || first.height != second.height) {
-      return 'Not mached';
+      return 'Images must be the same height and width';
     } else {
       num difference = 0;
       for (int y = 0; y < first.height; y++) {
