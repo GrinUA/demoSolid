@@ -10,17 +10,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  File _firstImage;
-  File _secondImage;
+  File _firstFile;
+  File _secondFile;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Demo Solid Software'),
-      ),
-      body: _body(),
-    );
+        appBar: AppBar(
+          title: Text('Demo Solid Software'),
+        ),
+        body: _body());
   }
 
   _body() {
@@ -30,18 +29,18 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         _ImageHolder(
-          file: _firstImage,
-          onImagePick: (file) {
+          file: _firstFile,
+          onImageTap: (file) {
             setState(() {
-              _firstImage = file;
+              _firstFile = file;
             });
           },
         ),
         _ImageHolder(
-            file: _secondImage,
-            onImagePick: (file) {
+            file: _secondFile,
+            onImageTap: (file) {
               setState(() {
-                _secondImage = file;
+                _secondFile = file;
               });
             }),
         _compareButton()
@@ -50,22 +49,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _compareButton() {
-    return Padding(
-        padding: EdgeInsets.only(bottom: 12),
-        child: RaisedButton(
-          child: Text('Compare'),
-          onPressed: () async {
-            print(await ImageComparator.compare(_firstImage, _secondImage));
-          },
-        ));
+    return Builder(builder: (context) {
+      return Padding(
+          padding: EdgeInsets.only(bottom: 12),
+          child: RaisedButton(
+            child: Text('Compare'),
+            onPressed: () => _compareImages(context),
+          ));
+    });
+  }
+
+  _compareImages(BuildContext context) async {
+    if (_firstFile == null || _secondFile == null) {
+      _showError(context);
+    } else {
+      _showAnswer(
+          context, await ImageComparator.compare(_firstFile, _secondFile));
+    }
   }
 }
 
 class _ImageHolder extends StatelessWidget {
   final File file;
-  final Function(File) onImagePick;
+  final Function(File) onImageTap;
 
-  const _ImageHolder({Key key, @required this.file, @required this.onImagePick})
+  const _ImageHolder({Key key, @required this.file, @required this.onImageTap})
       : super(key: key);
 
   @override
@@ -74,8 +82,8 @@ class _ImageHolder extends StatelessWidget {
         flex: 3,
         fit: FlexFit.loose,
         child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: GestureDetector(
+          padding: const EdgeInsets.all(12),
+          child: GestureDetector(
               child: file == null
                   ? Icon(
                 Icons.photo_camera,
@@ -83,13 +91,43 @@ class _ImageHolder extends StatelessWidget {
                 size: 80,
               )
                   : Image.file(file),
-              onTap: () async {
-                var image =
-                await ImagePicker.pickImage(source: ImageSource.gallery);
-                if (image != null) {
-                  onImagePick(image);
-                }
-              },
-            )));
+              onTap: () => _getPicture()),
+        ));
   }
+
+  _getPicture() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      onImageTap(image);
+    }
+  }
+}
+
+void _showAnswer(BuildContext context, String result) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Done'),
+        content: Text('$result'),
+        actions: [
+          FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+    },
+  );
+}
+
+void _showError(BuildContext context) {
+  Scaffold.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.red,
+      content: Text('Please choose 2 images'),
+    ),
+  );
 }
