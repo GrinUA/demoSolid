@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
-import 'package:image/image.dart' as image;
+import 'package:image/image.dart';
 
-abstract class ImageComparator {
+class ImageComparator {
   static Future<String> compare(File firstFile, File secondFile) async {
-    image.Image first = image.decodeImage(firstFile.readAsBytesSync());
-    image.Image second = image.decodeImage(secondFile.readAsBytesSync());
+    Image first = decodeImage(firstFile.readAsBytesSync());
+    Image second = decodeImage(secondFile.readAsBytesSync());
 
     if (first.width != second.width || first.height != second.height) {
       return 'Images must be the same height and width';
@@ -27,13 +26,13 @@ abstract class ImageComparator {
   }
 
   static int _getDifferenceByPixel(int first, int second) {
-    return ((image.getRed(first) - image.getRed(second)).abs() +
-        (image.getGreen(first) - image.getGreen(second)).abs() +
-        (image.getBlue(first) - image.getBlue(second)).abs());
+    return ((getRed(first) - getRed(second)).abs() +
+        (getGreen(first) - getGreen(second)).abs() +
+        (getBlue(first) - getBlue(second)).abs());
   }
 
   static double _getDifferencePercentage(
-      {@required int width, @required int height, @required int difference}) {
+      {int width, int height, int difference}) {
     int totalPixels = width * height * 3;
     double avgDifferentPixels = difference / totalPixels;
     return (avgDifferentPixels / 255) * 100;
