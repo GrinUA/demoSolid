@@ -1,23 +1,27 @@
+import 'dart:io';
+
 import 'package:image/image.dart';
 
 class ImageService {
-  Future<String> compare(Image first, Image second) async {
-    if (first.width != second.width || first.height != second.height) {
-      return 'Images must be the same height and width';
-    } else {
-      num difference = 0;
-      for (int y = 0; y < first.height; y++) {
-        for (int x = 0; x < first.width; x++) {
-          int pixelFirst = first.getPixel(x, y);
-          int pixelSecond = second.getPixel(x, y);
-          difference += _getDifferenceByPixel(pixelFirst, pixelSecond);
-        }
-      }
+  Future<String> compare(File firstFile, File secondFile) async {
+    final Image first = decodeImage(firstFile.readAsBytesSync());
+    final Image second = decodeImage(secondFile.readAsBytesSync());
 
-      double percentage = _getDifferencePercentage(
-          width: first.width, height: first.height, difference: difference);
-      return 'Difference is: ${percentage.floor()}%';
+    if (first.width != second.width || first.height != second.height) {
+      return 'For images that do not match in sizes difference is: 100%';
     }
+    num difference = 0;
+    for (int y = 0; y < first.height; y++) {
+      for (int x = 0; x < first.width; x++) {
+        int pixelFirst = first.getPixel(x, y);
+        int pixelSecond = second.getPixel(x, y);
+        difference += _getDifferenceByPixel(pixelFirst, pixelSecond);
+      }
+    }
+
+    double percentage = _getDifferencePercentage(
+        width: first.width, height: first.height, difference: difference);
+    return 'Difference is: ${percentage.floor()}%';
   }
 
   int _getDifferenceByPixel(int first, int second) {

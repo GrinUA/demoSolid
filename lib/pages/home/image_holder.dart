@@ -12,24 +12,21 @@ class ImageHolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-        flex: 3,
-        fit: FlexFit.loose,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: GestureDetector(
-              child: file == null
-                  ? Icon(
-                      Icons.photo_camera,
-                      color: Colors.grey,
-                      size: 80,
-                    )
-                  : Image.file(file),
-              onTap: () => _getPicture()),
-        ));
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: GestureDetector(
+          child: file == null
+              ? Icon(
+                  Icons.photo_camera,
+                  color: Colors.grey,
+                  size: 80,
+                )
+              : Image.file(file),
+          onTap: () => _getPicture()),
+    );
   }
 
-  _getPicture() async {
+  Future<void> _getPicture() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       onImageTap(image);
