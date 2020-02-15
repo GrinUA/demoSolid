@@ -1,7 +1,9 @@
 import 'dart:io';
 
-import 'package:demo/utils/computing.dart';
+import 'package:demo/services/alert.dart';
+import 'package:demo/services/image.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 
 import 'image_holder.dart';
 
@@ -11,6 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _alertService = AlertService();
+  final _imageService = ImageService();
   File _firstFile;
   File _secondFile;
 
@@ -62,39 +66,39 @@ class _HomePageState extends State<HomePage> {
 
   _compareImages(BuildContext context) async {
     if (_firstFile == null || _secondFile == null) {
-      _showError(context);
+      _alertService.showErrorMessage(context, 'Please choose two image');
     } else {
-      _showAnswer(
-          context, await ImageComparator.compare(_firstFile, _secondFile));
+      img.Image firstImage = img.decodeImage(_firstFile.readAsBytesSync());
+      img.Image secondImage = img.decodeImage(_secondFile.readAsBytesSync());
+
+      if (firstImage.width != secondImage.width ||
+          firstImage.height != secondImage.height) {
+        _alertService.showErrorMessage(
+            context, 'Images must match in height and width');
+      } else {
+        _showAnswer(
+            context, await _imageService.compare(firstImage, secondImage));
+      }
     }
   }
+}
 
-  void _showAnswer(BuildContext context, String result) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Done'),
-          content: Text('$result'),
-          actions: [
-            FlatButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  void _showError(BuildContext context) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.red,
-        content: Text('Please choose 2 images'),
-      ),
-    );
-  }
+void _showAnswer(BuildContext context, String result) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Result'),
+        content: Text('$result'),
+        actions: [
+          FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+    },
+  );
 }
