@@ -5,6 +5,7 @@ import 'package:demo/extensions/image_apis.dart';
 import 'package:demo/services/alert.dart';
 import 'package:demo/widgets/image_holder.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 
 class HomePage extends StatefulWidget {
   @override
@@ -72,9 +73,15 @@ class _HomePageState extends State<HomePage> {
     if (firstFile == null || secondFile == null) {
       alertService.showErrorSnackBar(_key, 'Please choose two image');
     } else {
-      final String result =
-          await firstFile.asImage().compare(secondFile.asImage());
-      alertService.showAlertDialog(context, message: result, title: 'Result');
+      final img.Image firstImage = firstFile.asImage();
+      final img.Image secondImage = secondFile.asImage();
+      if (!firstImage.equalSize(secondImage)) {
+        alertService.showErrorSnackBar(
+            _key, 'Please provide images with the same width and height');
+      } else {
+        final img.Image result = await firstImage.difference(secondImage);
+        alertService.showResultDialog(context, image: result, title: 'Result');
+      }
     }
   }
 }

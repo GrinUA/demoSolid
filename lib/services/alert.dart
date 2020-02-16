@@ -1,4 +1,6 @@
+import 'package:demo/extensions/image_apis.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 
 class AlertService {
   void showErrorSnackBar(GlobalKey<ScaffoldState> contextKey, String message) {
@@ -9,14 +11,14 @@ class AlertService {
     contextKey.currentState.showSnackBar(snackBar);
   }
 
-  void showAlertDialog(BuildContext context,
-      {@required String message, String title}) {
+  void showResultDialog(BuildContext context,
+      {@required img.Image image, String title}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title ?? ''),
-          content: Text('$message'),
+          content: image.asWidget(),
           actions: [
             FlatButton(
               child: Text('OK'),
