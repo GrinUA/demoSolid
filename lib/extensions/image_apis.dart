@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' as material;
 import 'package:image/image.dart';
 
-extension ImageComparator on Image {
+extension ImageProcessor on Image {
   material.Widget asWidget() {
     return material.Image(image: material.MemoryImage(encodePng(this)));
   }
