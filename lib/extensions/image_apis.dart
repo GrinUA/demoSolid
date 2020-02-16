@@ -1,26 +1,21 @@
-import 'dart:io';
-
 import 'package:image/image.dart';
 
-class ImageService {
-  Future<String> compare(File firstFile, File secondFile) async {
-    final Image first = decodeImage(firstFile.readAsBytesSync());
-    final Image second = decodeImage(secondFile.readAsBytesSync());
-
-    if (first.width != second.width || first.height != second.height) {
+extension ImageComparator on Image {
+  Future<String> compare(Image second) async {
+    if (this.width != second.width || this.height != second.height) {
       return 'For images that do not match in sizes difference is: 100%';
     }
     num difference = 0;
-    for (int y = 0; y < first.height; y++) {
-      for (int x = 0; x < first.width; x++) {
-        int pixelFirst = first.getPixel(x, y);
+    for (int y = 0; y < this.height; y++) {
+      for (int x = 0; x < this.width; x++) {
+        int pixelFirst = this.getPixel(x, y);
         int pixelSecond = second.getPixel(x, y);
         difference += _getDifferenceByPixel(pixelFirst, pixelSecond);
       }
     }
 
     double percentage = _getDifferencePercentage(
-        width: first.width, height: first.height, difference: difference);
+        width: this.width, height: this.height, difference: difference);
     return 'Difference is: ${percentage.floor()}%';
   }
 

@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:demo/pages/home/image_holder.dart';
+import 'package:demo/extensions/file_apis.dart';
+import 'package:demo/extensions/image_apis.dart';
 import 'package:demo/services/alert.dart';
-import 'package:demo/services/image.dart';
+import 'package:demo/widgets/image_holder.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,7 +14,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   final AlertService alertService = AlertService();
-  final ImageService imageService = ImageService();
   File firstFile;
   File secondFile;
 
@@ -72,7 +72,8 @@ class _HomePageState extends State<HomePage> {
     if (firstFile == null || secondFile == null) {
       alertService.showErrorSnackBar(_key, 'Please choose two image');
     } else {
-      final String result = await imageService.compare(firstFile, secondFile);
+      final String result =
+          await firstFile.asImage().compare(secondFile.asImage());
       alertService.showAlertDialog(context, message: result, title: 'Result');
     }
   }
