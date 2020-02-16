@@ -8,15 +8,22 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
 class HomePage extends StatefulWidget {
+  final AlertService alertService;
+
+  const HomePage({Key key, this.alertService = const AlertService()})
+      : super(key: key);
+
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(alertService: alertService);
 }
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
-  final AlertService alertService = AlertService();
+  final AlertService alertService;
   File firstFile;
   File secondFile;
+
+  _HomePageState({@required this.alertService});
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
 class AlertService {
+  const AlertService();
   void showErrorSnackBar(GlobalKey<ScaffoldState> contextKey, String message) {
     final snackBar = SnackBar(
       backgroundColor: Colors.red,
