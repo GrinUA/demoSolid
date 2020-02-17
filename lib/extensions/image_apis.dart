@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart' as material;
+import 'package:flutter/widgets.dart' as widgets;
 import 'package:image/image.dart';
 
 extension ImageProcessor on Image {
-  material.Widget asWidget() {
-    return material.Image(image: material.MemoryImage(encodePng(this)));
+  widgets.MemoryImage toMemoryWidget() {
+    return widgets.MemoryImage(encodePng(this));
   }
 
-  bool equalSize(Image second) {
+  bool isSameSize(Image second) {
     return this.height == second.height && this.width == second.width;
   }
 
-  Future<Image> difference(Image second) async {
+  Image difference(Image second) {
     int differenceColor = 0xFF0000FF;
     Image result = Image.from(this);
     for (int y = 0; y < result.height; y++) {

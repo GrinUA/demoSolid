@@ -19,7 +19,7 @@ class AlertService {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title ?? ''),
-          content: image.asWidget(),
+          content: Image(image: image.toMemoryWidget()),
           actions: [
             FlatButton(
               child: Text('OK'),

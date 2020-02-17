@@ -72,21 +72,21 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(bottom: 12),
         child: RaisedButton(
           child: Text('Compare'),
-          onPressed: () => _compareImages(context),
+          onPressed: () => _compareImages(),
         ));
   }
 
-  Future<void> _compareImages(BuildContext context) async {
+  Future<void> _compareImages() async {
     if (firstFile == null || secondFile == null) {
       alertService.showErrorSnackBar(_key, 'Please choose two image');
     } else {
       final img.Image firstImage = firstFile.asImage();
       final img.Image secondImage = secondFile.asImage();
-      if (!firstImage.equalSize(secondImage)) {
+      if (!firstImage.isSameSize(secondImage)) {
         alertService.showErrorSnackBar(
             _key, 'Please provide images with the same width and height');
       } else {
-        final img.Image result = await firstImage.difference(secondImage);
+        final img.Image result = firstImage.difference(secondImage);
         alertService.showResultDialog(context, image: result, title: 'Result');
       }
     }

@@ -22,11 +22,11 @@ class ImageHolder extends StatelessWidget {
                   size: 80,
                 )
               : Image.file(file),
-          onTap: () => _getPicture()),
+          onTap: () => _requestPicture()),
     );
   }
 
-  Future<void> _getPicture() async {
+  Future<void> _requestPicture() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       onImageTap(image);
