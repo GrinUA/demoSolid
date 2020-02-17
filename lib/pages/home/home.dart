@@ -30,6 +30,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         key: _key,
         appBar: AppBar(
+          backgroundColor: Theme
+              .of(context)
+              .backgroundColor,
           title: Text('Demo Solid Software'),
         ),
         body: _body());
@@ -71,7 +74,12 @@ class _HomePageState extends State<HomePage> {
     return Padding(
         padding: EdgeInsets.only(bottom: 12),
         child: RaisedButton(
-          child: Text('Compare'),
+          color: Theme
+              .of(context)
+              .buttonColor,
+          child: Text(
+            'Compare',
+          ),
           onPressed: () => _compareImages(),
         ));
   }

@@ -7,9 +7,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Demo Application By Yurii',
+      title: 'Demo Solid Software',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        backgroundColor: Colors.blueAccent,
+        buttonColor: Colors.red,
       ),
       home: HomePage(),
     );

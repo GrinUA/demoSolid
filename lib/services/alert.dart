@@ -22,6 +22,9 @@ class AlertService {
           content: Image(image: image.toMemoryWidget()),
           actions: [
             FlatButton(
+              color: Theme
+                  .of(context)
+                  .buttonColor,
               child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
