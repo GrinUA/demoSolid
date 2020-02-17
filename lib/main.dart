@@ -9,8 +9,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Demo Solid Software',
       theme: ThemeData(
-        backgroundColor: Colors.blueAccent,
-        buttonColor: Colors.red,
+        backgroundColor: Colors.blue[300],
+        buttonColor: Colors.blue[100],
       ),
       home: HomePage(),
     );
